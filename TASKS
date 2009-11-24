@@ -4,23 +4,55 @@ Här listas de deluppgifter som ingår i labben och status för dessa.
 
     Namnrymd: dnd (förkortning för Dungeons & Dragons)
 
+    Algoritm:
+    
+        Spelet lagrar alla rum, spelare och föremål som pekare. Varje rum har
+        en lista med spelare i rummet. Varje rum har en lista med alla föremål
+        i rummet. Varje spelare lagrar vilket rum hon är i. Varje spelare
+        lagrar vilka föremål hon äger.
+
+        Skillnaden mellan dator- och användarstyrda spelare är bara att deras
+        actions styrs av AI eller input. Spelledaren (spelmotorn) avgör var
+        information om hur draget ska göras hämtas ifrån. Själva aktörerna
+        sköter alltså ej input från användaren.
+
+        Spelledaren loopar igenom spelarna i tur och ordning varje omgång. Om
+        spelaren är datorstyrd, görs en AI-action. Om spelaren är användarstyrd
+        hämtas indata från användaren.
+        Indata från användaren består av ett kommando följt av ett antal
+        argument. Antalet argument kan vara 0. Beroende på vilket kommando som
+        skrivs in körs olika funktioner för att parsa argumentlistan.
+
+        Exempel:
+
+            Användaren skriver 'take sword'. Då blir 'take' kommandot, och vi
+            slår i en map efter matchande funktion. Vi får fram
+            TakeAction::create. TakeAction::create kallas med hela
+            användarsträngen samt aktiv spelare. TakeAction::create parsar fram
+            att aktiv spelare vill ta upp ett föremål med namnet 'sword' i
+            aktivt rum.
+
+            TakeAction::create returnerar ett objekt av typen Action som kan
+            köras.
+
+        Den kommandofunktor som blir resultatet körs sedan. Eventuell extra
+        in / utmatning sker sedan direkt från funktorn. När funktorn returnerar
+        så är spelare klar med sin tur.
+
     Klasshierarki:
 
         Actor
-            Human :: Actor
-                Wizard :: Human :: Actor
 
-            Monster :: Actor
-                Troll :: Monster
-                Dragon :: Monster
-
-            Character :: Actor
-                Oracle :: Character
+            Princess :: Actor
+            Wizard :: Actor
+            Troll :: Actor
+            Dragon :: Actor
+            Oracle :: Actor
         
         Item
             Food :: Item
                 Meat :: Food
-
+    
             Tool :: Item
                 Weapon :: Tool
 
@@ -39,40 +71,67 @@ Här listas de deluppgifter som ingår i labben och status för dessa.
 
     Klasser :
 
-    Actor {
-        type()          - Typen för spelaren
-        name()          - Namnet på spelaren
-        action()        - Låt spelaren göra något
-        go()            - Gå åt ett håll
-        fight()         - Påbörja strid
-        flee()          - Fly från strid
-        pick_up()       - Ta upp en sak
-        drop()          - Släpp en sak
-        talk()          - Prata med en annan spelare
-    }
+        Actor :
 
-    Scene {
-        directions()    - Vilka utgångar som finns
-        neighbor()      - Returnera granne
-        description()   - Beskrivning av miljön
-        enter()         - Person kommer till platsen
-        leave()         - Person går från platsen
-        pick_up()       - Någon plockar upp ett föremål
-        drop()          - Någon släpper ett föremål
-    }
+            Attribut {
+                room            - Rummet som spelare befinner sig i
+                items           - Vilka items som spelaren har
+            }
 
-    Item {
-        weight()        - Vikten på föremålet
-    }
+            Metoder {
+                type()          - Typen för spelaren
+                name()          - Namnet på spelaren
+                go()            - Gå åt ett håll
+                get_room()      - Returnerar aktivt rum
+                pick_up()       - Ta upp en sak
+                drop()          - Släpp en sak
+                get_items()     - Returnerar lista med ägda föremål
+                respond()       - Returnera svar på fråga (sträng)
+                wield()         - Sätt objekt som aktivt
+                unwield()       - Sätt objekt som inaktivt
+                use()           - Använd objekt
+                fight()         - Påbörja strid
+                flee()          - Fly från strid
+                can_fight()     - Om spelaren kan slåss
+            }
 
-    Container {
-        volume()        - Mängden objekt som ryms i behållaren.
-        max_weight()    - Maximal vikt som kan lagras i behållaren.
+            Klasser som ärver från actor överlagrar bara vad varje metod
+            gör.
 
-        add()           - Lägg till objekt
-        remove()        - Ta bort objekt
-        items()         - Returnerar objekt som finns i behållaren.
-    }
+        Scene :
+
+            Attribut {
+                items           - Vilka föremål som finns på platsen.
+                actors          - Vilka spelare som finns på platsen.
+            }
+
+            Metoder {
+                directions()    - Vilka utgångar som finns
+                neighbor()      - Returnera granne
+                description()   - Beskrivning av miljön
+                enter()         - Person kommer till platsen
+                leave()         - Person går från platsen
+                add()           - Lägg till föremål/spelare till platsen
+                remove()        - Ta bort föremål/spelare från platsen
+            }
+
+        Item :
+            Metoder {
+                weight()        - Vikten på föremålet
+            }
+
+        Container :
+
+            Metoder {
+                volume()        - Mängden objekt som ryms i behållaren.
+                max_weight()    - Maximal vikt som kan lagras i behållaren.
+
+                add()           - Lägg till objekt
+                remove()        - Ta bort objekt
+                items()         - Returnerar objekt som finns i behållaren.
+            }
+
+        ...
 
 3.2 Spel
 
