@@ -27,7 +27,10 @@ doc :
 
 # DEPENDENCIES ##############################################################
 
-$(BIN)/actor.o : $(SRC)/actor.cpp $(SRC)/actor.h
+$(BIN)/actor.o : $(SRC)/actor.cpp $(SRC)/actor.h $(SRC)/item.h \
+	$(SRC)/scene.h
+
+$(BIN)/item.o : $(SRC)/item.h $(SRC)/item.cpp
 
 # GENERAL RULES #############################################################
 
