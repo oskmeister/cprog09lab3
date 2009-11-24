@@ -1,0 +1,81 @@
+Här listas de deluppgifter som ingår i labben och status för dessa.
+
+3.1 Arvsstruktur
+
+    Namnrymd: dnd (förkortning för Dungeons & Dragons)
+
+    Klasshierarki:
+
+        Actor
+            Human :: Actor
+                Wizard :: Human :: Actor
+
+            Monster :: Actor
+                Troll :: Monster
+                Dragon :: Monster
+
+            Character :: Actor
+                Oracle :: Character
+        
+        Item
+            Food :: Item
+                Meat :: Food
+
+            Tool :: Item
+                Weapon :: Tool
+
+            Container :: Item
+                Backpack :: Container
+
+        Scene
+            Indoors :: Scene
+                Room :: Indoors
+
+            Outdoors :: Scene
+                Forest :: Outdoors
+                Field :: Outdoors
+
+        Direction
+
+    Klasser :
+
+    Actor {
+        type()          - Typen för spelaren
+        name()          - Namnet på spelaren
+        action()        - Låt spelaren göra något
+        go()            - Gå åt ett håll
+        fight()         - Påbörja strid
+        flee()          - Fly från strid
+        pick_up()       - Ta upp en sak
+        drop()          - Släpp en sak
+        talk()          - Prata med en annan spelare
+    }
+
+    Scene {
+        directions()    - Vilka utgångar som finns
+        neighbor()      - Returnera granne
+        description()   - Beskrivning av miljön
+        enter()         - Person kommer till platsen
+        leave()         - Person går från platsen
+        pick_up()       - Någon plockar upp ett föremål
+        drop()          - Någon släpper ett föremål
+    }
+
+    Item {
+        weight()        - Vikten på föremålet
+    }
+
+    Container {
+        volume()        - Mängden objekt som ryms i behållaren.
+        max_weight()    - Maximal vikt som kan lagras i behållaren.
+
+        add()           - Lägg till objekt
+        remove()        - Ta bort objekt
+        items()         - Returnerar objekt som finns i behållaren.
+    }
+
+3.2 Spel
+
+    Spelet får inte vara för enkelt om det ska godkännas. Som jag tolkar det
+    så måste man ha med flera olika typer av aktörer och föremål samt miljöer,
+    samt utnyttja polymorfi på ett bra sätt för att bli godkänd.
