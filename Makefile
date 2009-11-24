@@ -22,6 +22,9 @@ all : game
 game : $(BIN)/main.o $(BIN)/actor.o
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+doc :
+	doxygen
+
 # DEPENDENCIES ##############################################################
 
 $(BIN)/actor.o : $(SRC)/actor.cpp $(SRC)/actor.h
